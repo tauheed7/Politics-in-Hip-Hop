@@ -54,6 +54,7 @@ ui <- navbarPage("Hip-Hop's Feelings Towards 2016 Presidential Candidates", them
                      dominate but also be overwhelmingly negative."),
                    p("Github link: https://github.com/tauheed7/final_project_work")
                    )), 
+                 
                  tabPanel("2016 Candidates in Hip-Hop", fluidPage(
                    titlePanel("Mentions of Each Candidate in Hip-Hop Songs"), 
                    sidebarLayout(
@@ -74,7 +75,17 @@ ui <- navbarPage("Hip-Hop's Feelings Towards 2016 Presidential Candidates", them
                                           selected = "money",
                                           c("personal", "hotel", "money", 
                                             "political", "the apprentice", "n/a"))), 
-                     mainPanel(plotOutput("Plot2"))))))
+                     mainPanel(plotOutput("Plot2"))))),
+                 
+                 tabPanel("Key Takeaway", fluidPage(
+                   titlePanel("Trump's Popularity"), 
+                   sidebarLayout(
+                     sidebarPanel(
+                       checkboxGroupInput(inputId = "sentiment2", 
+                                          label = "Sentiment", 
+                                          selected = "neutral",
+                                          c("neutral" = "neutral", "positive" = "positive", "negative" = "negative"))),
+                     mainPanel(plotOutput("Plot3"))))))
 
 
 
@@ -108,11 +119,17 @@ server <- function(input, output) {
   
   output$Plot3 <- renderPlot({
     
+    req(input$sentiment2)
+    
+    data3 <- trump_only %>% filter(sentiment == "positive", sentiment == input$sentiment2)
+    data4 <- trump_only %>% filter(sentiment == "neutral", sentiment == input$sentiment2)
+    data5 <- trump_only %>% filter(sentiment == "negative", sentiment == input$sentiment2)
+    
     ggplot() + 
-      geom_smooth(data = trump_positive, aes(x = album_release_date, y = ..count..), stat = "bin", color = "green") +
-      geom_smooth(data = trump_neutral, aes(x = album_release_date, y = ..count..), stat = "bin", color = "black") + 
-      geom_smooth(data = trump_negative, aes(x = album_release_date, y = ..count..), stat = "bin", color = "red") + 
-      xlab("Year") + ylab("Number of Trump mentions")
+      geom_line(data = data3, aes(x = album_release_date, y = ..count..), stat = "bin", color = "green") + 
+      geom_line(data = data4, aes(x = album_release_date, y = ..count..), stat = "bin", color = "black") + 
+      geom_line(data = data5, aes(x = album_release_date, y = ..count..), stat = "bin", color = "red") + 
+      xlab("Year") + ylab("Number of Trump Mentions")
     
   })
   

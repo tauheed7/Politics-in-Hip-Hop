@@ -41,7 +41,7 @@ trump_sentiment_time <- ggplot() +
   geom_smooth(data = trump_positive, aes(x = album_release_date, y = ..count..), stat = "bin", color = "green") +
   geom_smooth(data = trump_neutral, aes(x = album_release_date, y = ..count..), stat = "bin", color = "black") + 
   geom_smooth(data = trump_negative, aes(x = album_release_date, y = ..count..), stat = "bin", color = "red") + 
-  xlab("Year") + ylab("Number of Trump mentions") 
+  xlab("Year") + ylab("Number of Trump Mentions") 
 
 
 trump_money <- subset(trump_only, theme == "money")
@@ -50,7 +50,7 @@ trump_money <- subset(trump_only, theme == "money")
 trump_politics <- subset(trump_only, theme == "political")
 
 
-trump_sentiment_albums <- ggplot() + 
+trump_theme_time <- ggplot() + 
   geom_smooth(data = trump_money, aes(x = album_release_date, y = ..count..), stat = "bin", color = "green") +
   geom_smooth(data = trump_politics, aes(x = album_release_date, y = ..count..), stat = "bin", color = "red") + 
-  xlab("Album Release Date") + ylab("Number of Trump mentions")
+  xlab("Year") + ylab("Number of Trump mentions")
