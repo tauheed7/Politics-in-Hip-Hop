@@ -10,50 +10,41 @@
 library(shiny)
 library(shinythemes)
 library(tidyverse)
+library(wordcloud2)
 
 
 candidates_in_hiphop <- read_csv("genius_hip_hop_lyrics_csv.csv")
 
 
-positive_sentiment <- subset(candidates_in_hiphop, sentiment == "positive")
-
-
 trump_only <- subset(candidates_in_hiphop, candidate == "donald trump")
 
-
-trump_positive <- subset(trump_only, sentiment == "positive")
-
-
-trump_negative <- subset(trump_only, sentiment == "negative")
-
-
-trump_neutral <- subset(trump_only, sentiment == "neutral")
-
-candidate_choices <- candidates_in_hiphop %>% 
-  group_by(candidate) %>% summarize()
-
-sentiment_choices <- candidates_in_hiphop %>% 
-  group_by(sentiment) %>% summarize()
-
-theme_choices <- candidates_in_hiphop %>% 
-  group_by(theme) %>% summarize()
+# Here I downloaded and assigned my data set again as it helps me to further process and manipulate the data for the app. 
+#I know the data should for the most part be ready to go but I find working on the same page helps my thought process. 
+#I've also wrote in a subsetted dataframe that was necessary for me later on. 
 
 
 # Define UI for application that draws a histogram
 ui <- navbarPage("Hip-Hop's Feelings Towards 2016 Presidential Candidates", theme = shinytheme("slate"),
                  
-                 
+                # Here I provide my one sentence pitch and four sentence elevator pitch. I'm not sure how effective 
+                #mine are as I've never done it before but appreciate that we get to practice this. 
                  
                  tabPanel("About This App", fluidPage(
                    titlePanel("Summary"),
-                   p("Hip-Hop loves Trump's money but hates Trump."),
-                   p("In this app, I am analyzing mentions of the 2016 presidential candidates
+                   p("Hip-Hop hates Trump but love's Trump's money."),
+                   p("In this app, I am analyzing references of the 2016 presidential candidates
                      in Hip-Hop music up until 2016. To do this, I am examining song data from
                      Genius. I am looking to see which candidates were mentioned most and what 
                      was said about the candidates. I expect mentions of Trump to not only 
                      dominate but also be overwhelmingly negative."),
-                   p("Github link: https://github.com/tauheed7/final_project_work")
+                   p("The data I used is available below and is from the popular music and lyric website Genius."),
+                   p("Github link: https://github.com/tauheed7/Politics-in-Hip-Hop"),
+                   downloadButton(outputId = "download_data", label = "Download Data")
                    )), 
+                
+                # I thought it good practice to include a download option for my data. 
+                
+                # I decided to do a tab format because I think it is very effective and visually pleasing. 
                  
                  tabPanel("2016 Candidates in Hip-Hop", fluidPage(
                    titlePanel("Mentions of Each Candidate in Hip-Hop Songs"), 
@@ -92,9 +83,10 @@ ui <- navbarPage("Hip-Hop's Feelings Towards 2016 Presidential Candidates", them
                                           label = "Theme", 
                                           selected = "money",
                                           c("money" = "money", "politics" = "political"))),
-                     mainPanel(plotOutput("Plot4")))))) 
+                     mainPanel(plotOutput("Plot4"))))))
                    
-
+  # For the app, I wanted to use a variety of inputs, which explains why I have check boxes, radio buttons, and a drop
+  #down menu. I wanted to make sure I can create all of these and ensure my app is as interactive as I can make it. 
 
 
 
@@ -102,6 +94,14 @@ ui <- navbarPage("Hip-Hop's Feelings Towards 2016 Presidential Candidates", them
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+  output$download_data <- downloadHandler(
+    filename = "genius_hip_hop_lyrics_csv.csv", 
+    content = function(file) {write.csv(candidates_in_hiphop, file)})
+  
+  # I chose bar graphs for my second tab, which is the main part of my app, because I thought it would best represent the 
+  #data visually. I have categorical variables that I am looking at a count for and so bar graphs made the most sense
+  #to me. 
   
   output$Plot <- renderPlot({
     
@@ -126,6 +126,10 @@ server <- function(input, output) {
   })
   
   output$Plot3 <- renderPlot({
+    
+    # For my third tab in order to get three different lines on a plot, it was a little tricky for me and I'm sure 
+    #there was a better way to do it but using three different datasets and filtering out what I needed ended up 
+    #working well for me.
     
     req(input$sentiment2)
     
@@ -156,6 +160,7 @@ server <- function(input, output) {
     
     
   })
+  
   
   
 }
