@@ -38,10 +38,17 @@ trump_neutral <- subset(trump_only, sentiment == "neutral")
 
 
 trump_sentiment_time <- ggplot() + 
-  geom_smooth(data = trump_positive, aes(x = album_release_date, y = ..count..), stat = "bin", color = "green") +
-  geom_smooth(data = trump_neutral, aes(x = album_release_date, y = ..count..), stat = "bin", color = "black") + 
-  geom_smooth(data = trump_negative, aes(x = album_release_date, y = ..count..), stat = "bin", color = "red") + 
-  xlab("Year") + ylab("Number of Trump Mentions") 
+  geom_smooth(data = trump_positive, aes(x = album_release_date, y = ..count.., fill = sentiment), 
+              stat = "bin", color = "green") +
+  geom_smooth(data = trump_neutral, aes(x = album_release_date, y = ..count.., fill = sentiment), 
+              stat = "bin", color = "black") + 
+  geom_smooth(data = trump_negative, aes(x = album_release_date, y = ..count.., fill = sentiment), 
+              stat = "bin", color = "red") + 
+  xlab("Year") + ylab("Number of Trump Mentions") + ggtitle("Positive, Negative, and Neutral Mentions of Trump Over Time")
+
+
+legend(1990, 15, legend = c("positive", "neutral", "negative"), col = c("green", "black", "red"))
+ 
 
 
 trump_money <- subset(trump_only, theme == "money")

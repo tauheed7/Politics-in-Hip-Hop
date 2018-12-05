@@ -85,7 +85,15 @@ ui <- navbarPage("Hip-Hop's Feelings Towards 2016 Presidential Candidates", them
                                           label = "Sentiment", 
                                           selected = "neutral",
                                           c("neutral" = "neutral", "positive" = "positive", "negative" = "negative"))),
-                     mainPanel(plotOutput("Plot3"))))))
+                     mainPanel(plotOutput("Plot3"))), 
+                   sidebarLayout(
+                     sidebarPanel(
+                       checkboxGroupInput(inputId = "theme2", 
+                                          label = "Theme", 
+                                          selected = "money",
+                                          c("money" = "money", "politics" = "political"))),
+                     mainPanel(plotOutput("Plot4")))))) 
+                   
 
 
 
@@ -121,15 +129,31 @@ server <- function(input, output) {
     
     req(input$sentiment2)
     
-    data3 <- trump_only %>% filter(sentiment == "positive", sentiment == input$sentiment2)
-    data4 <- trump_only %>% filter(sentiment == "neutral", sentiment == input$sentiment2)
-    data5 <- trump_only %>% filter(sentiment == "negative", sentiment == input$sentiment2)
+    data3 <- trump_only %>% filter(sentiment == "positive") %>% filter(sentiment == input$sentiment2)
+    data4 <- trump_only %>% filter(sentiment == "neutral") %>% filter(sentiment == input$sentiment2)
+    data5 <- trump_only %>% filter(sentiment == "negative") %>% filter(sentiment == input$sentiment2)
     
     ggplot() + 
       geom_line(data = data3, aes(x = album_release_date, y = ..count..), stat = "bin", color = "green") + 
       geom_line(data = data4, aes(x = album_release_date, y = ..count..), stat = "bin", color = "black") + 
       geom_line(data = data5, aes(x = album_release_date, y = ..count..), stat = "bin", color = "red") + 
-      xlab("Year") + ylab("Number of Trump Mentions")
+      xlab("Year") + ylab("Number of Trump Mentions") + 
+      ggtitle("Positive, Negative, and Neutral Mentions of Trump Over Time")
+
+  })
+  
+  output$Plot4 <- renderPlot({
+  
+  req(input$theme2)
+  
+    data6 <- trump_only %>% filter(theme == "money") %>% filter(theme == input$theme2)
+    data7 <- trump_only %>% filter(theme == "political") %>% filter(theme == input$theme2)
+    
+    ggplot() + 
+      geom_smooth(data = data6, aes(x = album_release_date, y = ..count..), stat = "bin", color = "green") +
+      geom_smooth(data = data7, aes(x = album_release_date, y = ..count..), stat = "bin", color = "red") + 
+      xlab("Year") + ylab("Number of Trump mentions")
+    
     
   })
   
