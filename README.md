@@ -1,6 +1,7 @@
 # Politics-in-Hip-Hop
 References of 2016 Presidential Candidates in Hip-Hop Songs 
 
+
 Hip-Hop hates Trump but love's Trump's money.
 
 In this app, I am analyzing references of the 2016 presidential candidates in Hip-Hop music from 1989 up until 2016. To do this, I am examining song data from Genius. I am looking to see which candidates were mentioned most, whether or not those references were positive, negative, or neutral, and what exactly was said about the popular candidates. I expect mentions of Trump to not only dominate but also be overwhelmingly negative.
