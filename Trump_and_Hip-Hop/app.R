@@ -31,11 +31,12 @@ ui <- navbarPage("Hip-Hop's Feelings Towards 2016 Presidential Candidates", them
                  
                  tabPanel("About This App", fluidPage(
                    titlePanel("Summary"),
-                   p("Hip-Hop hates Trump but love's Trump's money."),
+                   p("Hip-Hop hates Trump but loves Trump's money."),
                    p("In this app, I am analyzing references of the 2016 presidential candidates
-                     in Hip-Hop music up until 2016. To do this, I am examining song data from
-                     Genius. I am looking to see which candidates were mentioned most and what 
-                     was said about the candidates. I expect mentions of Trump to not only 
+                     in Hip-Hop music from 1989 up until 2016. To do this, I am examining song data from
+                     Genius. I am looking to see which candidates were mentioned most, whether or not those 
+                     references were positive, negative, or neutral, and what exactly
+                     was said about the popular candidates. I expect mentions of Trump to not only 
                      dominate but also be overwhelmingly negative."),
                    p("The data I used is available below and is from the popular music and lyric website Genius."),
                    p("Github link: https://github.com/tauheed7/Politics-in-Hip-Hop"),
@@ -46,7 +47,7 @@ ui <- navbarPage("Hip-Hop's Feelings Towards 2016 Presidential Candidates", them
                 
                 # I decided to do a tab format because I think it is very effective and visually pleasing. 
                  
-                 tabPanel("2016 Candidates in Hip-Hop", fluidPage(
+                 tabPanel("2016 Candidate References in Hip-Hop", fluidPage(
                    titlePanel("Mentions of Each Candidate in Hip-Hop Songs"), 
                    sidebarLayout(
                      sidebarPanel(
@@ -74,15 +75,15 @@ ui <- navbarPage("Hip-Hop's Feelings Towards 2016 Presidential Candidates", them
                      sidebarPanel(
                        checkboxGroupInput(inputId = "sentiment2", 
                                           label = "Sentiment", 
-                                          selected = "neutral",
-                                          c("neutral" = "neutral", "positive" = "positive", "negative" = "negative"))),
+                                          selected = "negative",
+                                          c("positive (green)" = "positive", "negative (red)" = "negative"))),
                      mainPanel(plotOutput("Plot3"))), 
                    sidebarLayout(
                      sidebarPanel(
                        checkboxGroupInput(inputId = "theme2", 
                                           label = "Theme", 
                                           selected = "money",
-                                          c("money" = "money", "politics" = "political"))),
+                                          c("money (green)" = "money", "politics (red)" = "political"))),
                      mainPanel(plotOutput("Plot4"))))))
                    
   # For the app, I wanted to use a variety of inputs, which explains why I have check boxes, radio buttons, and a drop
@@ -109,7 +110,7 @@ server <- function(input, output) {
     
     data1 <- candidates_in_hiphop %>% filter(sentiment == input$sentiment)
     
-    ggplot(data1, aes(x = candidate, fill = candidate)) + geom_bar() + 
+    ggplot(data1, aes(x = candidate, fill = candidate)) + geom_bar() + xlab("Candidate") +
       ylab("Number of Times Mentioned") + ggtitle("Mentions of Each Candidate by Sentiment")
     
   })
@@ -121,7 +122,7 @@ server <- function(input, output) {
     data2 <- candidates_in_hiphop %>% filter(theme == input$theme, candidate == input$candidate)
     
     ggplot(data2, aes(x = sentiment, fill = theme)) + geom_bar() + 
-      xlab("Sentiment of Donald Trump in a Hip Hop Song") + ylab("Number of Times Mentioned") + 
+      xlab("Sentiment of Trump/Clinton in Hip-Hop Songs") + ylab("Number of Times Mentioned") + 
       ggtitle("Trump & Clinton References by Sentiment and Theme")
   })
   
@@ -138,11 +139,10 @@ server <- function(input, output) {
     data5 <- trump_only %>% filter(sentiment == "negative") %>% filter(sentiment == input$sentiment2)
     
     ggplot() + 
-      geom_line(data = data3, aes(x = album_release_date, y = ..count..), stat = "bin", color = "green") + 
-      geom_line(data = data4, aes(x = album_release_date, y = ..count..), stat = "bin", color = "black") + 
-      geom_line(data = data5, aes(x = album_release_date, y = ..count..), stat = "bin", color = "red") + 
+      geom_smooth(data = data3, aes(x = album_release_date, y = ..count..), stat = "bin", color = "green") + 
+      geom_smooth(data = data5, aes(x = album_release_date, y = ..count..), stat = "bin", color = "red") + 
       xlab("Year") + ylab("Number of Trump Mentions") + 
-      ggtitle("Positive, Negative, and Neutral Mentions of Trump Over Time")
+      ggtitle("Positive and Negative Mentions of Trump Over Time")
 
   })
   
@@ -156,7 +156,8 @@ server <- function(input, output) {
     ggplot() + 
       geom_smooth(data = data6, aes(x = album_release_date, y = ..count..), stat = "bin", color = "green") +
       geom_smooth(data = data7, aes(x = album_release_date, y = ..count..), stat = "bin", color = "red") + 
-      xlab("Year") + ylab("Number of Trump mentions")
+      xlab("Year") + ylab("Number of Trump mentions") + ggtitle("References to Trump's Money vs. Politics over
+                                                                time.")
     
     
   })

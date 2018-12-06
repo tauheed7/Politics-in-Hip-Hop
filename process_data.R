@@ -49,7 +49,7 @@ trump_sentiment_time <- ggplot() +
               stat = "bin", color = "red") + 
   xlab("Year") + ylab("Number of Trump Mentions") + ggtitle("Positive, Negative, and Neutral Mentions of Trump Over Time")
 
-#Rappers also started talking more about his politics and less about his money. 
+#Rappers also started talking more about his politics and less about his money.
 
 trump_money <- subset(trump_only, theme == "money")
 
