@@ -61,3 +61,6 @@ trump_theme_time <- ggplot() +
   geom_smooth(data = trump_money, aes(x = album_release_date, y = ..count..), stat = "bin", color = "green") +
   geom_smooth(data = trump_politics, aes(x = album_release_date, y = ..count..), stat = "bin", color = "red") + 
   xlab("Year") + ylab("Number of Trump mentions")
+
+
+

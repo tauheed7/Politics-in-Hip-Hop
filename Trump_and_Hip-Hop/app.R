@@ -19,7 +19,8 @@ candidates_in_hiphop <- read_csv("genius_hip_hop_lyrics_csv.csv")
 trump_only <- subset(candidates_in_hiphop, candidate == "donald trump")
 
 # Here I downloaded and assigned my data set again as it helps me to further process and manipulate the data for the app. 
-#I know the data should for the most part be ready to go but I find working on the same page helps my thought process. 
+#I know the data should for the most part be ready to go but I find working on the same page helps my thought process
+#and the data set is not too large. 
 #I've also wrote in a subsetted dataframe that was necessary for me later on. 
 
 
@@ -31,7 +32,7 @@ ui <- navbarPage("Hip-Hop's Feelings Towards 2016 Presidential Candidates", them
                  
                  tabPanel("About This App", fluidPage(
                    titlePanel("Summary"),
-                   p("Hip-Hop hates Trump but loves Trump's money."),
+                   h4("Hip-Hop hates Trump but loves Trump's money."),
                    p("In this app, I am analyzing references of the 2016 presidential candidates
                      in Hip-Hop music from 1989 up until 2016. To do this, I am examining song data from
                      Genius. I am looking to see which candidates were mentioned most, whether or not those 
@@ -54,8 +55,8 @@ ui <- navbarPage("Hip-Hop's Feelings Towards 2016 Presidential Candidates", them
                        selectInput(inputId = "sentiment", 
                                    label = "Sentiment", 
                                    selected = "neutral",
-                                   c("neutral" = "neutral", "positive" = "positive", "negative" = "negative"),
-                                   multiple = TRUE)),
+                                   c("neutral", "positive", "negative"),
+                                   multiple = FALSE)),
                      mainPanel(plotOutput("Plot"))),
                    sidebarLayout( 
                      sidebarPanel(
@@ -108,10 +109,12 @@ server <- function(input, output) {
     
     req(input$sentiment)
     
-    data1 <- candidates_in_hiphop %>% filter(sentiment == input$sentiment)
+    data1 <- candidates_in_hiphop %>% filter(sentiment == input$sentiment) 
     
-    ggplot(data1, aes(x = candidate, fill = candidate)) + geom_bar() + xlab("Candidate") +
-      ylab("Number of Times Mentioned") + ggtitle("Mentions of Each Candidate by Sentiment")
+    ggplot(data1, aes(x = candidate)) + geom_bar(fill = "#9933FF") + xlab("Candidate") +
+      ylab("Number of Times Mentioned") + ggtitle("Mentions of Each Candidate by Sentiment") + coord_flip()
+    
+    
     
   })
   
